@@ -20,6 +20,14 @@ import fs from "fs";
 
 dotenv.config();
 
+// Validate required environment variables
+const requiredEnvVars = ['PORT', 'MONGODB_URL', 'CLERK_SECRET_KEY'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+if (missingVars.length > 0) {
+    console.error('Missing required environment variables:', missingVars.join(', '));
+    process.exit(1);
+}
+
 const app = express();
 const _dirname = path.resolve();
 const PORT = process.env.PORT;
@@ -29,12 +37,18 @@ initializeSocket(httpServer);
 
 app.use(cors(
   {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   }
 ));
 
 app.use(express.json());//to parse json req.body
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
 app.use(clerkMiddleware()); // this will add auth to req object
 app.use(fileupload({
   useTempFiles: true,

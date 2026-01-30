@@ -27,7 +27,7 @@ const AuthProviders = ({ children }: { children: React.ReactNode }) => {
                     //init socket
                     if(userId) initSocket(userId);
                 }
-            } catch (error: any) {
+            } catch (error: unknown) {
                 updateApiToken(null);
                 console.log("Error getting token:", error);
             }  finally {

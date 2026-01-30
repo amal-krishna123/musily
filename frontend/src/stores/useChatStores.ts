@@ -1,13 +1,13 @@
 import { axiosInstance } from "@/lib/axios";
 import type { Message, User } from "@/types";
 import { create } from "zustand";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 interface ChatStore {
     users: User[];
     isLoading: boolean;
     error: string | null;
-    socket: any;
+    socket: Socket | null;
     isConnected: boolean;
     onlineUsers: Set<string>;
     userActivities: Map<string,string>;
@@ -46,8 +46,9 @@ export const useChatStore = create<ChatStore>((set,get) => ({
         try {
             const response = await axiosInstance.get("/users");
             set({users: response.data });
-        } catch (error: any) {
-            set({ error: error.response.data.message || "Failed to fetch users" });
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch users"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({ error: message });
         } finally {
             set({ isLoading: false });
         }
@@ -124,8 +125,9 @@ export const useChatStore = create<ChatStore>((set,get) => ({
 		try {
 			const response = await axiosInstance.get(`/users/messages/${userId}`);
 			set({ messages: response.data });
-		} catch (error: any) {
-			set({ error: error.response.data.message });
+		} catch (error: unknown) {
+			const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch messages"; // eslint-disable-line @typescript-eslint/no-explicit-any
+			set({ error: message });
 		} finally {
 			set({ isLoading: false });
 		}

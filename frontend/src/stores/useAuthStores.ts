@@ -22,8 +22,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
                 withCredentials: true
             });
             set({ isAdmin: response.data.isAdmin });
-        } catch (error: any) {
-            set({ isAdmin: false, error: error.response?.data?.message || "Failed to check admin status" });
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response?.data?.message : "Failed to check admin status"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({ isAdmin: false, error: message });
         } finally {
             set({ isLoading: false });
         }

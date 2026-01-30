@@ -4,7 +4,7 @@ import type { Song } from "@/types";
 import PlayButton from "./PlayButton";
 
 type SectionGridProps = {
-  title: String;
+  title: string;
   songs: Song[];
   isLoading: boolean;
 }

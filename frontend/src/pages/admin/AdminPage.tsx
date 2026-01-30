@@ -10,9 +10,6 @@ import { useEffect } from "react";
 
 const AdminPage = () => {
     const {isAdmin, isLoading} = useAuthStore();
-
-    if(!isAdmin && ! isLoading) return <div>Unauthorized</div>
-
     const { fetchAlbums, fetchSongs, fetchStats } = useMusicStore();
 
 	useEffect(() => {
@@ -20,6 +17,8 @@ const AdminPage = () => {
 		fetchSongs();
 		fetchStats();
 	}, [fetchAlbums, fetchSongs, fetchStats]);
+
+    if(!isAdmin && ! isLoading) return <div>Unauthorized</div>
 
 
     return (

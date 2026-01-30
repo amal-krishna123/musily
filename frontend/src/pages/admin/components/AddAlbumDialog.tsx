@@ -62,8 +62,9 @@ const AddAlbumDialog = () => {
 			setImageFile(null);
 			setAlbumDialogOpen(false);
 			toast.success("Album created successfully");
-		} catch (error: any) {
-			toast.error("Failed to create album: " + error.message);
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : "Failed to create album";
+			toast.error("Failed to create album: " + message);
 		} finally {
 			setIsLoading(false);
 		}

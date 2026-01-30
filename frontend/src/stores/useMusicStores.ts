@@ -47,8 +47,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get("/albums");
             set({ albums: response.data});
-        } catch (error: any) {
-            set({error: error.response.data.message || "Failed to fetch albums"});
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch albums"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({error: message});
         } finally {
             set({ isLoading: false });
         }
@@ -59,8 +60,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get(`/albums/${albumId}`);
             set({ currentAlbum: response.data });
-        } catch (error: any) {
-            set({ error: error.response.data.message || "Failed to fetch album" });
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch album"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({ error: message });
         } finally {
             set({ isLoading: false });
         }
@@ -71,8 +73,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get("/songs/featured");
             set({ featuredSongs: response.data });
-        } catch (error: any) {
-            set({ error: error.response.data.message || "Failed to fetch featured songs" });
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch featured songs"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({ error: message });
         } finally {
             set({ isLoading: false });
         }
@@ -83,8 +86,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get("/songs/trending");
             set({trendingSongs: response.data});
-        } catch (error:any) {
-            set({ error: error.response.data.message || "Failed to fetch trending songs" });
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch trending songs"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({ error: message });
         } finally {
             set({ isLoading: false });
         }
@@ -95,8 +99,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get("/songs/made-for-you");
             set({ madeForYouSongs: response.data });
-        } catch (error: any) {
-            set({ error: error.response.data.message || "Failed to fetch made for you songs" });
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch made for you songs"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({ error: message });
         } finally {
             set({ isLoading: false });
         }
@@ -107,8 +112,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get("/songs");
             set({ songs: response.data});
-        } catch (error: any) {
-            set({error: error.response.data.message || "Failed to fetch songs"});
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch songs"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({error: message});
         } finally {
             set({ isLoading: false });
         }
@@ -119,8 +125,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
         try {
             const response = await axiosInstance.get("/stats");
             set({ stats: response.data});
-        } catch (error: any) {
-            set({error: error.response.data.message || "Failed to fetch stats"});
+        } catch (error: unknown) {
+            const message = error instanceof Error && 'response' in error ? (error as any).response.data.message : "Failed to fetch stats"; // eslint-disable-line @typescript-eslint/no-explicit-any
+            set({error: message});
         } finally {
             set({ isLoading: false });
         }
@@ -135,7 +142,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 				songs: state.songs.filter((song) => song._id !== id),
 			}));
 			toast.success("Song deleted successfully");
-		} catch (error: any) {
+		} catch (error: unknown) {
 			console.log("Error in deleteSong", error);
 			toast.error("Error deleting song");
 		} finally {
@@ -154,8 +161,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
 				),
 			}));
 			toast.success("Album deleted successfully");
-		} catch (error: any) {
-			toast.error("Failed to delete album: " + error.message);
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : "Failed to delete album";
+			toast.error("Failed to delete album: " + message);
 		} finally {
 			set({ isLoading: false });
 		}
